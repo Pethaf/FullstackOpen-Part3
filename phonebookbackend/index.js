@@ -26,6 +26,11 @@ let persons = [
     }
 ];
 
+const generateId = () => {
+ return persons.length === 0 ? 1 : 
+  Math.max(...persons.map(person => person.id))+1
+}
+
 app.get("/api/persons",(req,res) => {
     res.json(persons);
 })
@@ -58,7 +63,19 @@ app.post("/api/persons/",(req, res) => {
       error:'content missing'
     })
   }
-  
+  const submitedPerson = {...req.body}
+  if(persons.findIndex(person => person.name === submitedPerson.name) !== -1){
+    return res.status(400).json({
+      error: "name must be unique"
+    })
+  }
+  else {
+    const newPerson = {id:generateId(),...submitedPerson}
+    persons = [...persons, newPerson]
+    res.status(200).json({...newPerson})
+  }
+
+    
 })
 const PORT = 3001;
 app.listen(PORT);
