@@ -2,7 +2,8 @@ const http = require('http')
 const express = require("express");
 const app = express()
 const morgan = require("morgan");
-app.use(morgan("tiny"))
+morgan.token('type', function (req, res) { return req.body? JSON.stringify(res.body): "" })
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 app.use(express.json())
 const generateId = () => {
   return persons.length === 0 ? 1 : 
