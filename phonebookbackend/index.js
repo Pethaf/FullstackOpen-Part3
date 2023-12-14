@@ -1,7 +1,20 @@
 const http = require('http')
 const express = require("express");
 const app = express()
+const morgan = require("morgan");
+app.use(morgan("tiny"))
 app.use(express.json())
+const generateId = () => {
+  return persons.length === 0 ? 1 : 
+   Math.max(...persons.map(person => person.id))+1
+ }
+ const requestLogger = (request, response, next) => {
+   console.log('Method:', request.method)
+   console.log('Path:  ', request.path)
+   console.log('Body:  ', request.body)
+   console.log('---')
+   next()
+ }
 
 let persons = [
     { 
@@ -26,10 +39,14 @@ let persons = [
     }
 ];
 
-const generateId = () => {
- return persons.length === 0 ? 1 : 
-  Math.max(...persons.map(person => person.id))+1
+
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
 }
+
+app.use(requestLogger)
+
 
 app.get("/api/persons",(req,res) => {
     res.json(persons);
