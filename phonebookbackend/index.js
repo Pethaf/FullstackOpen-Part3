@@ -1,10 +1,12 @@
 const http = require('http')
 const express = require("express");
+const cors = require("cors");
 const app = express()
 const morgan = require("morgan");
 morgan.token('type', function (req, res) { return req.body? JSON.stringify(res.body): "" })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 app.use(express.json())
+app.use(cors())
 const generateId = () => {
   return persons.length === 0 ? 1 : 
    Math.max(...persons.map(person => person.id))+1
@@ -95,6 +97,7 @@ app.post("/api/persons/",(req, res) => {
 
     
 })
-const PORT = 3001;
-app.listen(PORT);
-console.log(`Server running on ${PORT}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+}) 
