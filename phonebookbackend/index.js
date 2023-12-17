@@ -2,6 +2,7 @@ const http = require('http')
 const express = require("express");
 const cors = require("cors");
 const app = express()
+app.use(express.static('dist'))
 const morgan = require("morgan");
 morgan.token('type', function (req, res) { return req.body? JSON.stringify(res.body): "" })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
