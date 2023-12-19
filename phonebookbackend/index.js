@@ -54,24 +54,18 @@ app.delete("/api/person/:id",(req,res)=>{
 })
 app.post("/api/persons/",(req, res) => {
   const body = req.body;
-  if(!req.body.name || ! req.body.number){
+  if(!body.name || ! body.phoneNumber){
     return res.status(400).json({
       error:'content missing'
     })
   }
-  const submitedPerson = {...req.body}
-  if(persons.findIndex(person => person.name === submitedPerson.name) !== -1){
-    return res.status(400).json({
-      error: "name must be unique"
-    })
-  }
-  else {
-    const newPerson = {id:generateId(),...submitedPerson}
-    persons = [...persons, newPerson]
-    res.status(200).json({...newPerson})
-  }
-
-    
+  const person = new Person({
+    name: body.name,
+    phoneNumber: body.phoneNumber
+  })
+  person.save().then(savedPerson => {
+    res.json(savedPerson);
+  })
 })
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
