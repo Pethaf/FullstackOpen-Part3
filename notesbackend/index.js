@@ -1,4 +1,14 @@
 require("dotenv").config()
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
 const http = require('http')
 const express = require("express");
 const app = express()
@@ -14,7 +24,7 @@ app.get('/api/notes', (request, response) => {
     response.json(notes)
   })
 })
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id).then(note => {
     if (note) {
       response.json(note)
@@ -23,8 +33,7 @@ app.get('/api/notes/:id', (request, response) => {
       response.status(404).end()
     }
   }).catch(error => {
-    console.log(error)
-    response.status(500).end()
+    next(error)
   })
 })
 
@@ -62,3 +71,4 @@ app.put('/api/notes/:id',(req, res,next)=> {
 const PORT = process.env.PORT
 app.listen(PORT);
 console.log(`Server running on ${PORT}`)
+app.use(errorHandler)
