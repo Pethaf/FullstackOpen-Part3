@@ -39,6 +39,7 @@ app.get("/api/persons", (req, res) => {
     res.json(result)
   })
 })
+
 app.get("/info", (req, res) => {
   const now = new Date()
   Person.where({}).countDocuments().then(result => {
