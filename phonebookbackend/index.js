@@ -64,7 +64,6 @@ app.delete("/api/person/:id", (req, res, next) => {
   }).catch(error => next(error))
 })
 app.post("/api/persons/", (req, res) => {
-  console.log("test")
   const body = req.body;
   if (!body.name || !body.phoneNumber) {
     return res.status(400).json({
@@ -80,11 +79,11 @@ app.post("/api/persons/", (req, res) => {
   }).catch((error) => next(error))
 })
 
-app.put("/api/persons/:id", (req, res, next) => {
-  person.findByIdAndUpdate(
+app.put("/api/person/:id", (req, res, next) => {
+  Person.findByIdAndUpdate(
     req.params.id, {
-    name: body.name,
-    phoneNumber: body.phoneNumber
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber
   },
     { new: true, runValidators: true, context: 'query' }
 
