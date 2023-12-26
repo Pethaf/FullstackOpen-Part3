@@ -64,13 +64,8 @@ app.delete("/api/person/:id", (req, res, next) => {
     res.status(204).end()
   }).catch(error => next(error))
 })
-app.post("/api/persons/", (req, res) => {
+app.post("/api/persons/", (req, res, next) => {
   const body = req.body;
-  if (!body.name || !body.phoneNumber) {
-    return res.status(400).json({
-      error: 'content missing'
-    })
-  }
   const person = new Person({
     name: body.name,
     phoneNumber: body.phoneNumber
