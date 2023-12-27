@@ -1,24 +1,32 @@
 const mongoose = require("mongoose");
-mongoose.set('strictQuery',false)
+mongoose.set('strictQuery', false)
 const URL = process.env.MONGODB_URI;
 console.log(`connecting to ${URL}`)
 mongoose.connect(URL).then(result => {
     console.log(`connected to MongoDB`)
-}).catch((error) =>{
+}).catch((error) => {
     console.log(`error connecting to MongoDB: ${error.message}`)
 })
 
 const personSchema = new mongoose.Schema({
-    
+
     name: {
         type: String,
-        minLength: 3, 
-        required: true
+        minLength: [3,"Username needs to be at least 3 characters long"],
+        required: [true,"Need to provide username"],
+        unique: true
     },
-    phoneNumber:{
+    phoneNumber: {
         type: String,
-        required: true
-    } 
+        minlength: [8,"Phone number needs to be at least 8 characters long"],
+        required: [true,"Need to provide phone number"],
+        validate: {
+           validator: function(arg) {
+                return /^\d{2,3}-\d{1,}$/.test(arg)
+            },
+            message: props => `${props.value} is not a valid phone number`
+        }
+    }
 
 })
 
