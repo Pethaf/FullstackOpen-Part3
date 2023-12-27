@@ -5,7 +5,7 @@ if (process.argv.length < 3) {
 }
 
 
-const password = process.argv[2];
+const password = process.argv[2]
 const name = process.argv[3]
 const phoneNumber = process.argv[4]
 
@@ -20,7 +20,7 @@ mongoose.connect(url)
 
 if (!name || !phoneNumber) {
   Person.find({}).then(result => {
-    console.log(`phonebook:`)
+    console.log('phonebook:')
     result.forEach(person => {
       console.log(`${person.name} ${person.phoneNumber}`)
     })
@@ -32,7 +32,7 @@ else {
     name: `${name}`,
     phoneNumber: `${phoneNumber}`
   })
-  person.save().then(result => {
+  person.save().then(() => {
     console.log(`added ${person.name} number ${person.phoneNumber} to phonebook`)
     mongoose.connection.close()
   })
